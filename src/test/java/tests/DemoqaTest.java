@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
-public class demoqaTest {
+public class DemoqaTest {
     @BeforeAll
     static void beforeAll() {
         Configuration.baseUrl = "https://demoqa.com";
@@ -21,7 +23,7 @@ public class demoqaTest {
         $("#firstName").setValue("Alex");
         $("#lastName").setValue("Ovechkin");
         $("#userEmail").setValue("Alex@email.com");
-        $(".custom-control-input#gender-radio-1 + label").click();
+        $(byText("Male")).click();
         $("#userNumber").setValue("1234567890");
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select").selectOptionByValue("4");
@@ -36,16 +38,16 @@ public class demoqaTest {
         $("#submit").scrollTo().click();
 
         $(".modal-content").shouldBe(visible);
-        $(".table-responsive").shouldHave(text("Alex Ovechkin"));
-        $(".table-responsive").shouldHave(text("Alex@email.com"));
-        $(".table-responsive").shouldHave(text("Male"));
-        $(".table-responsive").shouldHave(text("1234567890"));
-        $(".table-responsive").shouldHave(text("10 May,1990"));
-        $(".table-responsive").shouldHave(text("Maths"));
-        $(".table-responsive").shouldHave(text("Sports"));
-        $(".table-responsive").shouldHave(text("flat.jpeg"));
-        $(".table-responsive").shouldHave(text("Abrakadabra"));
-        $(".table-responsive").shouldHave(text("Haryana Karnal"));
+        $(".table-responsive").shouldHave(text("Alex Ovechkin"),
+                text("Alex@email.com"),
+                text("Male"),
+                text("1234567890"),
+                text("10 May,1990"),
+                text("Maths"),
+                text("Sports"),
+                text("flat.jpeg"),
+                text("Abrakadabra"),
+                text("Haryana Karnal"));
         $("#closeLargeModal").click();
         $(".modal-content").shouldNotBe(visible);
     }
