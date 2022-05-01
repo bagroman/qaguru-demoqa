@@ -3,14 +3,16 @@ package tests;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pages.RegistrationPage;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 
 public class DemoqaTest {
+    RegistrationPage registrationPage = new RegistrationPage();
+
     @BeforeAll
     static void beforeAll() {
         Configuration.baseUrl = "https://demoqa.com";
@@ -19,36 +21,30 @@ public class DemoqaTest {
 
     @Test
     void checkForm() {
-        open("/automation-practice-form");
-        $("#firstName").setValue("Alex");
-        $("#lastName").setValue("Ovechkin");
-        $("#userEmail").setValue("Alex@email.com");
-        $(byText("Male")).click();
-        $("#userNumber").setValue("1234567890");
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__month-select").selectOptionByValue("4");
-        $(".react-datepicker__year-select").selectOptionByValue("1990");
-        $(".react-datepicker__day--010").click();
-        $("#subjectsInput").setValue("Ma").pressEnter();
-        $("#hobbiesWrapper").find("#hobbies-checkbox-1 + label").click();
-        $("#uploadPicture").uploadFromClasspath("flat.jpeg");
-        $("#currentAddress").setValue("Abrakadabra");
-        $("#react-select-3-input").setValue("Haryana").pressEnter();
-        $("#react-select-4-input").setValue("Karnal").pressEnter();
-        $("#submit").scrollTo().click();
+        registrationPage.openPage()
+            .setFirstName("Alex")
+            .setLastName("Ovechkin")
+            .setEmail("Alex@email.com")
+            .setGender("Male")
+            .setUserNumber("1234567890")
+            .setBirthDate("10", "4", "1990")
+            .setSubject("Ma")
+            .setHobbies("Sports")
+            .uploadImage("flat.jpeg")
+            .setAddress("Abrakadabra")
+            .selectState("Haryana")
+            .selectCity("Karnal")
+            .submitForm();
 
-        $(".modal-content").shouldBe(visible);
-        $(".table-responsive").shouldHave(text("Alex Ovechkin"),
-                text("Alex@email.com"),
-                text("Male"),
-                text("1234567890"),
-                text("10 May,1990"),
-                text("Maths"),
-                text("Sports"),
-                text("flat.jpeg"),
-                text("Abrakadabra"),
-                text("Haryana Karnal"));
-        $("#closeLargeModal").click();
-        $(".modal-content").shouldNotBe(visible);
+        registrationPage.checkForm("Student Name", "Alex" + "Ovechkin")
+                .checkForm("Student Email", "Alex@email.com")
+                .checkForm("Gender", "Male")
+                .checkForm("Mobile", "1234567890")
+                .checkForm("Date of Birth", "10 May,1990")
+                .checkForm("Subjects", "Maths")
+                .checkForm("Hobbies", "Sports")
+                .checkForm("Picture", "flat.jpeg")
+                .checkForm("Address", "Abrakadabra")
+                .checkForm("State and City", "Haryana Karnal");
     }
 }
